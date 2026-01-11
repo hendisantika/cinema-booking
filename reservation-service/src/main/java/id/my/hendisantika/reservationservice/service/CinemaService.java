@@ -2,6 +2,7 @@ package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.Cinema;
 import id.my.hendisantika.reservationservice.dto.response.CinemaResponseDTO;
+import id.my.hendisantika.reservationservice.entity.BranchEntity;
 import id.my.hendisantika.reservationservice.entity.CinemaEntity;
 import id.my.hendisantika.reservationservice.repository.BranchRepository;
 import id.my.hendisantika.reservationservice.repository.CinemaRepository;
@@ -113,6 +114,49 @@ public class CinemaService {
             log.info("Cinema id {} not found for the update", cinema.getId());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new CinemaResponseDTO("Cinema id " + cinema.getId() + " not found for the update", null));
+        } catch (Exception ex) {
+            log.error("Exception while finding Cinema by ID: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<CinemaResponseDTO> addCinema(Cinema cinema) {
+        try {
+            if (cinema == null) {
+                log.warn("Cinema is null for the add for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (!cinemaRepository.existsByHallNumber(cinema.getHallNumber())) {
+
+                if (branchRepository.existsById(cinema.getBranchId())) {
+                    BranchEntity branchEntity = branchRepository.findById(cinema.getBranchId()).orElse(null);
+                    if (branchEntity != null) {
+                        CinemaEntity cinemaEntity = new CinemaEntity();
+                        cinemaEntity.setId(cinema.getId());
+                        cinemaEntity.setName(cinema.getName());
+                        cinemaEntity.setHallNumber(cinema.getHallNumber());
+                        cinemaEntity.setCapacity(cinema.getCapacity());
+                        cinemaEntity.setLocation(cinema.getLocation());
+                        cinemaEntity.setBranch(branchEntity);
+
+                        branchEntity.getCinemas().add(cinemaEntity);
+                        CinemaEntity savedCinema = cinemaRepository.save(cinemaEntity);
+                        log.info("Cinema entity has been successfully added");
+                        return ResponseEntity.status(HttpStatus.OK)
+                                .body(new CinemaResponseDTO("Cinema id " + savedCinema.getId() + "added successfully ",
+                                        modelMapper.map(savedCinema, Cinema.class)));
+
+                    }
+                }
+                log.warn("Branch id {} not found for the add", cinema.getBranchId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+
+            }
+            log.warn("Cinema entity already exists for the add for the cinema");
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+
         } catch (Exception ex) {
             log.error("Exception while finding Cinema by ID: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
