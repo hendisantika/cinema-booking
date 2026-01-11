@@ -69,4 +69,26 @@ public class BranchService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<BranchResponseDTO> addBranch(Branch branch) {
+        try {
+            if (branch == null) {
+                log.warn("Branch id is null for the add for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (branchRepository.existsByContact((branch.getContact()))) {
+                log.warn("Branch already exists with id {}", branch.getId());
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            BranchEntity branchEntity = branchRepository.save(modelMapper.map(branch, BranchEntity.class));
+            log.info("Branch has  been successfully added");
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new BranchResponseDTO("Branch " + branchEntity.getId() + " has been Successfully added",
+                            modelMapper.map(branchEntity, Branch.class)));
+
+        } catch (Exception ex) {
+            log.error("Exception while finding Branch: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
