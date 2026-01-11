@@ -72,4 +72,29 @@ public class CinemaService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<CinemaResponseDTO> deleteCinema(Long id) {
+        try {
+            if (id == null) {
+                log.warn("Cinema id is null for the delete for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (cinemaRepository.existsById(id)) {
+                CinemaEntity cinemaEntity = cinemaRepository.findById(id).orElse(null);
+                if (cinemaEntity != null) {
+                    cinemaRepository.delete(cinemaEntity);
+                    log.info("Cinema {} entity has been successfully deleted", id);
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .body(new CinemaResponseDTO("Cinema " + id + "entity has been successfully deleted ", null));
+                }
+
+            }
+            log.info("Cinema id {} not found for the delete for the cinema", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new CinemaResponseDTO("Cinema id " + id + " not found for the delete for the cinema", null));
+        } catch (Exception ex) {
+            log.error("Exception while finding Cinema by ID: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
