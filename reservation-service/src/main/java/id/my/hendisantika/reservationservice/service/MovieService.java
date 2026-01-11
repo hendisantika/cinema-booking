@@ -2,6 +2,7 @@ package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.Movie;
 import id.my.hendisantika.reservationservice.dto.response.MovieResponseDTO;
+import id.my.hendisantika.reservationservice.entity.BranchEntity;
 import id.my.hendisantika.reservationservice.entity.MovieEntity;
 import id.my.hendisantika.reservationservice.repository.BranchRepository;
 import id.my.hendisantika.reservationservice.repository.MovieRepository;
@@ -73,6 +74,35 @@ public class MovieService {
             log.error("Exception while finding Branch list: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
 
+    public ResponseEntity<MovieResponseDTO> addMovie(Movie movie) {
+        try {
+            if (movie == null) {
+                log.warn("Movie is null for the add movie");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (movieRepository.existsByName(movie.getName())) {
+                log.warn("Movie with id {}  already  added", movie.getId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            BranchEntity branchEntity = modelMapper.map(branchRepository.findById(movie.getBranchId()), BranchEntity.class);
+            MovieEntity movieEntity = modelMapper.map(movie, MovieEntity.class);
+            movieEntity.getBranches().add(branchEntity);
+            branchEntity.getMovies().add(movieEntity);
+
+            MovieEntity savedMovieEntity = movieRepository.save(movieEntity);
+            branchRepository.save(branchEntity);
+
+            Movie movieMap = modelMapper.map(savedMovieEntity, Movie.class);
+            movieMap.setBranchId(branchEntity.getId());
+
+            log.info("Movie with id {} has been successfully added", movie.getId());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new MovieResponseDTO("movie Successfully added ", movieMap));
+        } catch (Exception ex) {
+            log.error("Exception while adding movie {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
