@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.Branch;
+import id.my.hendisantika.reservationservice.dto.response.BranchResponseDTO;
 import id.my.hendisantika.reservationservice.entity.BranchEntity;
 import id.my.hendisantika.reservationservice.repository.BranchRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,26 @@ public class BranchService {
             log.error("Exception while finding Branch list: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
 
+    public ResponseEntity<BranchResponseDTO> getBranch(Long branchId) {
+        try {
+            if (branchId == null) {
+                log.warn("Branch id is null for the retrieve branches");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (branchRepository.existsById(branchId)) {
+                log.info("Branch found with id {}", branchId);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new BranchResponseDTO("Branch found successfully", modelMapper
+                                .map(branchRepository.findById(branchId), Branch.class)));
+            }
+            log.info("Branch not found with id {}", branchId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        } catch (Exception ex) {
+            log.error("Exception while finding Branch: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
