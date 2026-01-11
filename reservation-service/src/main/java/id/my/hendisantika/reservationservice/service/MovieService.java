@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.Movie;
+import id.my.hendisantika.reservationservice.dto.response.MovieResponseDTO;
 import id.my.hendisantika.reservationservice.entity.MovieEntity;
 import id.my.hendisantika.reservationservice.repository.BranchRepository;
 import id.my.hendisantika.reservationservice.repository.MovieRepository;
@@ -53,5 +54,25 @@ public class MovieService {
             log.error("Exception while finding Branch list: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    public ResponseEntity<MovieResponseDTO> findMovieById(Long movieId) {
+        try {
+            if (movieId == null) {
+                log.warn("Movie id is null for the get movie by id");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (movieRepository.existsById(movieId)) {
+                log.info("Movie with id {} has been successfully retrieved", movieId);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .body(new MovieResponseDTO("found movie ", modelMapper.map(movieRepository.findById(movieId), Movie.class)));
+            }
+            log.warn("Movie with id {} not found for the get by id", movieId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception ex) {
+            log.error("Exception while finding Branch list: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 }
