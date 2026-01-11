@@ -115,4 +115,25 @@ public class BranchService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<BranchResponseDTO> deleteBranch(Long branchId) {
+        try {
+            if (branchId == null) {
+                log.warn("Branch id is null for the delete for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (branchRepository.existsById(branchId)) {
+                branchRepository.deleteById(branchId);
+                log.info("Branch  with id {} is successfully deleted", branchId);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new BranchResponseDTO("Branch " + branchId + " has been successfully deleted", null));
+            }
+            log.info("Branch not found with id {} for the delete", branchId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BranchResponseDTO("Branch " + branchId + "not found for th update", null));
+        } catch (Exception ex) {
+            log.error("Exception while finding Branch: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
