@@ -126,4 +126,8 @@ public class MovieService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<MovieResponseDTO> deleteMovie(Long movieId) {
+        return null;
+    }
 }
