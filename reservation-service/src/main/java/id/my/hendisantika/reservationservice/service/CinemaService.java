@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.Cinema;
+import id.my.hendisantika.reservationservice.dto.response.CinemaResponseDTO;
 import id.my.hendisantika.reservationservice.entity.CinemaEntity;
 import id.my.hendisantika.reservationservice.repository.BranchRepository;
 import id.my.hendisantika.reservationservice.repository.CinemaRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,6 +49,26 @@ public class CinemaService {
             return ResponseEntity.status(HttpStatus.OK).body(cinemas);
         } catch (Exception ex) {
             log.error("Exception while finding Cinemas: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<CinemaResponseDTO> getCinemasById(Long id) {
+        try {
+            if (id == null) {
+                log.warn("Cinema id is null for the get for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (cinemaRepository.existsById(id)) {
+                Optional<CinemaEntity> cinemaEntity = cinemaRepository.findById(id);
+                log.info("Cinema entity has been successfully retrieved");
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new CinemaResponseDTO("Cinema is id " + id, modelMapper.map(cinemaEntity, Cinema.class)));
+            }
+            log.warn("Cinema id {} not found for the get for the cinema", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception ex) {
+            log.error("Exception while finding Cinema by ID: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
