@@ -75,4 +75,34 @@ public class CustomerService {
                     .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
         }
     }
+
+    public ResponseEntity<CustomerResponseDTO> updateCustomer(Customer customer) {
+        try {
+            if (customer == null) {
+                log.error("Customer is null for update");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new CustomerResponseDTO("Customer is null", null));
+            }
+            if (customerRepository.existsById(customer.getId())) {
+                CustomerEntity customerEntity = customerRepository.findById(customer.getId()).orElse(null);
+                if (customerEntity != null) {
+                    customerEntity.setAddress(customer.getAddress());
+                    customerEntity.setNumber(customer.getNumber());
+                    customerRepository.save(customerEntity);
+                    log.info("Customer with email {} updated Successfully", customerEntity.getEmail());
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(new CustomerResponseDTO("Customer with email " + customerEntity.getEmail() + " updated successfully",
+                                    modelMapper.map(customerEntity, Customer.class)));
+                }
+            }
+            log.warn("Customer with email {} not exits for the update", customer.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new CustomerResponseDTO("Customer with email " + customer.getEmail() + " not exits", customer));
+
+        } catch (Exception ex) {
+            log.error("Exception while updating user: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
+        }
+    }
 }
