@@ -91,4 +91,28 @@ public class BranchService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<BranchResponseDTO> updateBranch(Branch branch) {
+        try {
+            if (branch == null) {
+                log.warn("Branch id is null for the update for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (branchRepository.existsById(branch.getId())) {
+                BranchEntity branchEntity = branchRepository.save(modelMapper.map(branch, BranchEntity.class));
+                log.info("Branch found with id {} for the update", branchEntity.getId());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new BranchResponseDTO("Branch " + branchEntity.getId() + "found successfully updated",
+                                modelMapper.map(branchEntity, Branch.class)));
+
+            }
+            log.info("Branch not found with id {} for the update", branch.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BranchResponseDTO("Branch " + branch.getId() + "not found for th update", null));
+
+        } catch (Exception ex) {
+            log.error("Exception while finding Branch: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
