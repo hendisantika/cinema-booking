@@ -130,4 +130,8 @@ public class MovieService {
     public ResponseEntity<MovieResponseDTO> deleteMovie(Long movieId) {
         return null;
     }
+
+    public ResponseEntity<List<Movie>> findAllMoviesByYear(String year) {
+        return null;
+    }
 }
