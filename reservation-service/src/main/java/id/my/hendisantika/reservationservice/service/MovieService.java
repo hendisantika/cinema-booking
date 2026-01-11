@@ -105,4 +105,25 @@ public class MovieService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<MovieResponseDTO> updateMovie(Movie movie) {
+        try {
+            if (movie == null) {
+                log.warn("Movie is null for the update movie");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (movieRepository.existsById(movie.getId())) {
+                movieRepository.save(modelMapper.map(movie, MovieEntity.class));
+                log.info("Movie with id {} has been successfully updated", movie.getId());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new MovieResponseDTO("Movie with id" + movie.getId() + "updated successfully", movie));
+            }
+            log.warn("Movie with id {} not found for the update movie", movie.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        } catch (Exception e) {
+            log.error("Exception while updating movie {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
