@@ -105,4 +105,27 @@ public class CustomerService {
                     .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
         }
     }
+
+    public ResponseEntity<CustomerResponseDTO> deleteCustomer(String email) {
+        try {
+            if (email == null || email.isEmpty()) {
+                log.error("Email is null for the delete");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new CustomerResponseDTO("Email is null", null));
+            }
+            if (customerRepository.existsByEmail(email)) {
+                customerRepository.delete(modelMapper.map(email, CustomerEntity.class));
+                log.info("Customer with email {} deleted Successfully", email);
+                ResponseEntity.status(HttpStatus.OK)
+                        .body(new CustomerResponseDTO("Customer with email " + email + " deleted Successfully", null));
+            }
+            log.warn("Customer with email {} not exits for the delete", email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new CustomerResponseDTO("Customer with email " + email + " not exits", null));
+        } catch (Exception ex) {
+            log.error("Exception while deleting user: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
+        }
+    }
 }
