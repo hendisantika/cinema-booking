@@ -1,5 +1,6 @@
 package id.my.hendisantika.reservationservice.dto;
 
+import id.my.hendisantika.reservationservice.enums.SeatType;
 import lombok.*;
 
 /**
