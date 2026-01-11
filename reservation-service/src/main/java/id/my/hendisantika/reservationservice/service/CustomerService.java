@@ -51,4 +51,28 @@ public class CustomerService {
                     .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
         }
     }
+
+    public ResponseEntity<CustomerResponseDTO> setCustomer(Customer customer) {
+        try {
+            if (customer == null) {
+                log.error("Customer is null for the add");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new CustomerResponseDTO("Customer is null", null));
+            }
+            if (!customerRepository.existsByEmail(customer.getEmail())) {
+                customerRepository.save(modelMapper.map(customer, CustomerEntity.class));
+                log.info("Customer with email {} saved Successfully", customer.getEmail());
+                ResponseEntity.status(HttpStatus.CREATED)
+                        .body(new CustomerResponseDTO("Customer with email " + customer.getEmail() + " saved successfully", customer));
+
+            }
+            log.warn("Customer with email {} already exits", customer.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new CustomerResponseDTO("Customer with email " + customer.getEmail() + " already exits", customer));
+        } catch (Exception ex) {
+            log.error("Exception while saving user: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
+        }
+    }
 }
