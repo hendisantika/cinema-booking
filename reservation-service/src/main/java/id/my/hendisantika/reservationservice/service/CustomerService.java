@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : cinema-booking
@@ -126,6 +128,27 @@ public class CustomerService {
             log.error("Exception while deleting user: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new CustomerResponseDTO("An exception occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public ResponseEntity<List<Customer>> getAllCustomer() {
+        try {
+            List<CustomerEntity> customerEntities = customerRepository.findAll();
+
+            if (customerEntities.isEmpty()) {
+                log.warn("No customers found");
+                return ResponseEntity.noContent().build();
+            }
+            List<Customer> customers = customerEntities.stream()
+                    .map(entity -> modelMapper.map(entity, Customer.class))
+                    .toList();
+            log.info("Fetched all customers successfully, count: {}", customers.size());
+            return ResponseEntity.ok(customers);
+
+        } catch (Exception ex) {
+            log.error("Exception while finding user: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
         }
     }
 }
