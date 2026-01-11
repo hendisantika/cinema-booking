@@ -97,4 +97,25 @@ public class CinemaService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<CinemaResponseDTO> updateCinema(Cinema cinema) {
+        try {
+            if (cinema == null) {
+                log.warn("Cinema is null for the update for the cinema");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (cinemaRepository.existsById(cinema.getId())) {
+                cinemaRepository.save(modelMapper.map(cinema, CinemaEntity.class));
+                log.info("Cinema entity has been successfully updated");
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new CinemaResponseDTO("Cinema id " + cinema.getId() + "updated successfully ", null));
+            }
+            log.info("Cinema id {} not found for the update", cinema.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new CinemaResponseDTO("Cinema id " + cinema.getId() + " not found for the update", null));
+        } catch (Exception ex) {
+            log.error("Exception while finding Cinema by ID: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
