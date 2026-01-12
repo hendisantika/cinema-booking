@@ -2,6 +2,7 @@ package id.my.hendisantika.reservationservice.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -15,8 +16,8 @@ import org.springframework.web.client.RestTemplate;
  * Time: 06.33
  * To change this template use File | Settings | File Templates.
  */
-@org.springframework.context.annotation.Configuration
-public class Configuration {
+@Configuration
+public class Configs {
     @Bean
     public ModelMapper mapper() {
         return new ModelMapper();
