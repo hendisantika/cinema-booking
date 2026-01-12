@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,4 +31,8 @@ public class ReservationSender extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
     private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
 
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) {
+        sessions.add(session);
+        log.info("Connected to web socket session {}", session.getId());
+    }
 }
