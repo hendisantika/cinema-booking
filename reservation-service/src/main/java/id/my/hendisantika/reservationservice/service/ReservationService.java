@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -278,6 +279,29 @@ public class ReservationService {
                         .body(reservations);
             }
             log.warn("No reservations with date: {}", reservationDate);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<List<Reservation>> getReservationByTime(LocalTime reservationTime) {
+        try {
+            if (reservationTime == null) {
+                log.warn("reservationsTime is null for the get reservations");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            List<ReservationEntity> reservationEntities = reservationRepository.getReservationByTime(reservationTime);
+            if (reservationEntities != null) {
+                List<Reservation> reservations = reservationEntities.stream()
+                        .map(entity -> modelMapper.map(entity, Reservation.class)).toList();
+                log.info("Found reservations with time: {}", reservationTime);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .body(reservations);
+            }
+            log.warn("No reservations with time: {}", reservationTime);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         } catch (Exception e) {
