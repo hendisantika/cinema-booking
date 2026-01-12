@@ -357,4 +357,27 @@ public class ReservationService {
         reservationRepository.save(reservation);
         return reservation;
     }
+
+    public void confirmReservation(UUID reservationId) {
+        if (reservationId != null) {
+            ReservationEntity reservation = reservationRepository.findByReservationId(reservationId);
+            reservation.setStatus(ReservationStatus.CONFIRMED);
+            ReservationEntity reservationEntity = reservationRepository.save(reservation);
+            Notification notification = new Notification();
+            notification.setReservationId(reservationEntity.getReservationId());
+            notification.setDate(reservationEntity.getDate());
+            notification.setTime(reservationEntity.getTime());
+            notification.setCustomerName(reservationEntity.getCustomer().getName());
+            notification.setEmail(reservationEntity.getCustomer().getEmail());
+            notification.setBranchName(reservationEntity.getCinema().getBranch().getName());
+            notification.setCinemaId(reservationEntity.getCinema().getId());
+            notification.setMovieName(reservationEntity.getMovie().getName());
+
+            List<Long> seatIds = reservationEntity.getSeats()
+                    .stream().map(SeatEntity::getId).collect(Collectors.toList());
+            notification.setSeatIds(seatIds);
+            log.info("Reservation {} Confirmed ..........", reservationEntity.getReservationId());
+            reservationSuccessEventProducer.publishReservationSuccess(notification);
+        }
+    }
 }
