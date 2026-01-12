@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : cinema-booking
@@ -99,6 +102,26 @@ public class SeatService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception ex) {
             log.error("Exception while deleting Seat {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<List<Seat>> getSeats() {
+        try {
+            List<SeatEntity> seatEntities = seatRepository.findAll();
+            if (seatEntities.isEmpty()) {
+                log.warn("seats is null for get seats");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body(new ArrayList<>());
+            }
+            List<Seat> seats = seatEntities.stream()
+                    .map(entity -> modelMapper.map(entity, Seat.class))
+                    .toList();
+            log.info("get seats successfully for get seats");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(seats);
+        } catch (Exception ex) {
+            log.error("Exception while getting seats", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
