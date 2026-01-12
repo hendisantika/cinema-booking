@@ -207,4 +207,25 @@ public class ReservationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<ReservationResponseDTO> deleteReservation(UUID reservationId) {
+        try {
+            if (reservationId == null) {
+                log.warn("reservations is null for the delete");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (reservationRepository.existsByReservationId(reservationId)) {
+                reservationRepository.deleteByReservationId(reservationId);
+                log.info("Deleted reservation with id: {}", reservationId);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ReservationResponseDTO("reservation " + reservationId + " delected Successfully ", null));
+            }
+            log.warn("No reservation with id: {} for the delete", reservationId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ReservationResponseDTO("reservation not found", null));
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
