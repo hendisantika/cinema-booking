@@ -129,4 +129,8 @@ public class SeatService {
     public ResponseEntity<List<Seat>> getSeatByRows(String row) {
         return null;
     }
+
+    public ResponseEntity<SeatResponseDTO> getSeatById(Long id) {
+        return null;
+    }
 }
