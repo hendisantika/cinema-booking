@@ -228,4 +228,37 @@ public class ReservationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<ReservationResponseDTO> updateReservation(Reservation reservation) {
+        try {
+            if (reservation == null) {
+                log.error("reservations is null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            ReservationEntity reservationEntity = reservationRepository.findByReservationId(reservation.getReservationId());
+            if (reservationEntity != null) {
+                reservationEntity.setDescription(reservation.getDescription());
+                reservationEntity.setDate(reservation.getDate());
+                reservationEntity.setTime(reservation.getTime());
+                reservationEntity.setConNumber(reservation.getConNumber());
+
+
+                ReservationEntity saved = reservationRepository.save(reservationEntity);
+                Reservation reservationModel = modelMapper.map(reservationEntity, Reservation.class);
+                reservationModel.setCinemaId(reservation.getCinemaId());
+                reservationModel.setMovieId(reservation.getMovieId());
+                reservationModel.setCustomerId(reservation.getCustomerId());
+                log.info("Updated reservation with id: {}", saved.getReservationId());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new ReservationResponseDTO("reservation " + saved.getReservationId() + " updated Successfully ", reservationModel));
+            }
+            log.warn("No reservation with id: {}", reservation.getReservationId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ReservationResponseDTO("reservation not found", null));
+
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
