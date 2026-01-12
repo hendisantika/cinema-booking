@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -255,6 +256,29 @@ public class ReservationService {
             log.warn("No reservation with id: {}", reservation.getReservationId());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ReservationResponseDTO("reservation not found", null));
+
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<List<Reservation>> getReservationByDate(LocalDate reservationDate) {
+        try {
+            if (reservationDate == null) {
+                log.warn("reservationsDate is null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            List<ReservationEntity> reservationEntities = reservationRepository.getReservationByDate(reservationDate);
+            if (reservationEntities != null) {
+                List<Reservation> reservations = reservationEntities.stream()
+                        .map(entity -> modelMapper.map(entity, Reservation.class)).toList();
+                log.info("Found reservations with date: {}", reservationDate);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .body(reservations);
+            }
+            log.warn("No reservations with date: {}", reservationDate);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         } catch (Exception e) {
             log.error("Exception while finding user: {}", e.getMessage(), e);
