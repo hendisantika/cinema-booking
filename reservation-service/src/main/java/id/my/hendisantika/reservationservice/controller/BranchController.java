@@ -50,4 +50,10 @@ public class BranchController {
     public ResponseEntity<BranchResponseDTO> updateBranch(@RequestBody Branch branch) {
         return branchService.updateBranch(branch);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BranchResponseDTO> deleteBranchById(@PathVariable Long id) {
+        return branchService.deleteBranch(id);
+    }
 }
