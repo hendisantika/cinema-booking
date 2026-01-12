@@ -57,4 +57,28 @@ public class SeatService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<SeatResponseDTO> updateSeat(Seat seatRequest) {
+        try {
+            if (seatRequest == null) {
+                log.warn("seatRequest is null for update seatRequest");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (seatRepository.existsById(seatRequest.getId())) {
+                SeatEntity seatEntity = seatRepository.save(modelMapper.map(seatRequest, SeatEntity.class));
+                Seat seat = modelMapper.map(seatEntity, Seat.class);
+                seat.setCinemaId(seat.getCinemaId());
+                log.info("seatRequest id {} updated successfully for update seatRequest", seatRequest.getId());
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .body(new SeatResponseDTO("Seat id " + seatRequest.getId() + " successfully updated", seat));
+
+            }
+            log.warn("seatRequest id {} not found for update seatRequest", seatRequest.getId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception ex) {
+            log.error("Exception while updating Seat {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
