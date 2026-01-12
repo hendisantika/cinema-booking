@@ -331,4 +331,21 @@ public class ReservationService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    public ResponseEntity<ReservationResponseDTO> cancelReservation(UUID id) {
+        try {
+            ReservationEntity reservationEntity = reservationRepository.findByReservationId(id);
+            for (SeatEntity seat : reservationEntity.getSeats()) {
+                seat.setAvailable(true);
+                seat.setReservation(null);
+            }
+            reservationRepository.delete(reservationEntity);
+            log.info("Cancelled reservation with id: {}", id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ReservationResponseDTO("Reservation cancelled successfully", null));
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
