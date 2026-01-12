@@ -125,4 +125,8 @@ public class SeatService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<List<Seat>> getSeatByRows(String row) {
+        return null;
+    }
 }
