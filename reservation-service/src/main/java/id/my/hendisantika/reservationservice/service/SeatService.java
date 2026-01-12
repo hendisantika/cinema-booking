@@ -81,4 +81,25 @@ public class SeatService {
         }
     }
 
+    public ResponseEntity<SeatResponseDTO> deleteSeat(Long id) {
+        try {
+            if (id == null) {
+                log.warn("seat is null for delete seat");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
+            if (seatRepository.existsById(id)) {
+                SeatEntity seat = seatRepository.findById(id).orElse(null);
+                seatRepository.delete(modelMapper.map(seat, SeatEntity.class));
+                log.info("seat id {} deleted successfully", id);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new SeatResponseDTO("Seat id " + id + " successfully deleted", null));
+            }
+            log.warn("seat id {} not found for delete seat", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception ex) {
+            log.error("Exception while deleting Seat {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
