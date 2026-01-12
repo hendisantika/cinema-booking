@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -40,5 +41,10 @@ public class ReservationSender extends TextWebSocketHandler {
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus closeStatus) {
         sessions.remove(session);
         log.info("Disconnected from web socket session {}", session.getId());
+    }
+
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        String payload = message.getPayload();
+        log.info("Received message from web socket session {}", session.getId());
     }
 }
