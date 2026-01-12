@@ -44,4 +44,10 @@ public class BranchController {
     public ResponseEntity<BranchResponseDTO> getBranchById(@PathVariable Long id) {
         return branchService.getBranch(id);
     }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BranchResponseDTO> updateBranch(@RequestBody Branch branch) {
+        return branchService.updateBranch(branch);
+    }
 }
