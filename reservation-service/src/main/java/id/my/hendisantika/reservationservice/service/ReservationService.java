@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.dto.PaymentDetails;
+import id.my.hendisantika.reservationservice.dto.PaymentSessionCreatedEvent;
 import id.my.hendisantika.reservationservice.dto.Reservation;
 import id.my.hendisantika.reservationservice.dto.SeatDetail;
 import id.my.hendisantika.reservationservice.dto.response.ReservationResponseDTO;
@@ -347,5 +348,13 @@ public class ReservationService {
             log.error("Exception while finding user: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    public ReservationEntity updateSession(PaymentSessionCreatedEvent paymentSessionCreatedEvent) {
+        ReservationEntity reservation = reservationRepository.findByReservationId(paymentSessionCreatedEvent.getReservationId());
+        reservation.setSessionId(paymentSessionCreatedEvent.getSessionId());
+        reservation.setSessionUrl(paymentSessionCreatedEvent.getSessionUrl());
+        reservationRepository.save(reservation);
+        return reservation;
     }
 }
