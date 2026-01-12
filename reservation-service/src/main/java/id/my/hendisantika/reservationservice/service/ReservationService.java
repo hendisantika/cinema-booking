@@ -309,4 +309,26 @@ public class ReservationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<List<Reservation>> getReservationByDateAndTime(LocalDate reservationDate, LocalTime reservationTime) {
+        try {
+            if (reservationDate == null || reservationTime == null) {
+                log.warn("reservations Date or Time is null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            List<ReservationEntity> reservationEntities = reservationRepository.findByDateAndTime(reservationDate, reservationTime);
+            if (!reservationEntities.isEmpty()) {
+                List<Reservation> reservations = reservationEntities.stream()
+                        .map(entity -> modelMapper.map(entity, Reservation.class)).toList();
+                log.info("Found reservations with date: {} and time: {}", reservationDate, reservationTime);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .body(reservations);
+            }
+            log.warn("No reservations with date: {} and time: {}", reservationDate, reservationTime);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            log.error("Exception while finding user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }
