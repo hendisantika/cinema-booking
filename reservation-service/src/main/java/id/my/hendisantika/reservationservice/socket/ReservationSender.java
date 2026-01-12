@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import id.my.hendisantika.reservationservice.dto.response.ReservationResponseDTO;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +47,20 @@ public class ReservationSender extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
         log.info("Received message from web socket session {}", session.getId());
+    }
+
+    public void broadcast(ReservationResponseDTO responseDTO) {
+        synchronized (sessions) {
+            for (WebSocketSession session : sessions) {
+                if (session.isOpen()) {
+                    try {
+                        String jsonString = objectMapper.writeValueAsString(responseDTO);
+                        session.sendMessage(new TextMessage(jsonString));
+                    } catch (Exception ex) {
+                        log.error(ex.getMessage());
+                    }
+                }
+            }
+        }
     }
 }
