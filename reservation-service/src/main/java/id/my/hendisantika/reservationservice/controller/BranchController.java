@@ -38,4 +38,10 @@ public class BranchController {
     public ResponseEntity<BranchResponseDTO> createBranch(@RequestBody Branch branch) {
         return branchService.addBranch(branch);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<BranchResponseDTO> getBranchById(@PathVariable Long id) {
+        return branchService.getBranch(id);
+    }
 }
