@@ -1,6 +1,8 @@
 package id.my.hendisantika.reservationservice.service;
 
+import id.my.hendisantika.reservationservice.entity.CustomerEntity;
 import id.my.hendisantika.reservationservice.repository.CustomerRepository;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +23,28 @@ public class UserSyncService {
 
     private final CustomerRepository customerRepository;
 
+    public void syncUser(Jwt jwt) {
+        String keycloakId = jwt.getSubject(); // sub
+        String email = jwt.getClaimAsString("email");
+        String username = jwt.getClaimAsString("preferred_username");
+
+        String age = jwt.getClaim("age");
+        String address = jwt.getClaimAsString("address");
+        String number = jwt.getClaimAsString("number");
+
+        customerRepository.findByKeyClockId(keycloakId)
+                .ifPresentOrElse(
+                        existing -> System.out.println("✅ User already exists"),
+                        () -> {
+                            CustomerEntity customer = new CustomerEntity();
+                            customer.setKeyClockId(keycloakId);
+                            customer.setEmail(email);
+                            customer.setName(username);
+                            customer.setAge(age);
+                            customer.setAddress(address);
+                            customer.setNumber(number);
+                            customerRepository.save(customer);
+                        }
+                );
+    }
 }
