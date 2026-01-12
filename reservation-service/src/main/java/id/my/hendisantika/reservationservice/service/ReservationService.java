@@ -380,4 +380,12 @@ public class ReservationService {
             reservationSuccessEventProducer.publishReservationSuccess(notification);
         }
     }
+
+    public void failReservation(UUID reservationId) {
+        if (reservationId != null) {
+            ReservationEntity reservation = reservationRepository.findByReservationId(reservationId);
+            reservation.setStatus(ReservationStatus.CANCELLED);
+            reservationRepository.save(reservation);
+        }
+    }
 }
