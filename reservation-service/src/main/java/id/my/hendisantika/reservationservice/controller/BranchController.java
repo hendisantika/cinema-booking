@@ -1,13 +1,12 @@
 package id.my.hendisantika.reservationservice.controller;
 
 import id.my.hendisantika.reservationservice.dto.Branch;
+import id.my.hendisantika.reservationservice.dto.response.BranchResponseDTO;
 import id.my.hendisantika.reservationservice.service.BranchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +31,11 @@ public class BranchController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<Branch>> getAllBranches() {
         return branchService.getBranches();
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BranchResponseDTO> createBranch(@RequestBody Branch branch) {
+        return branchService.addBranch(branch);
     }
 }
