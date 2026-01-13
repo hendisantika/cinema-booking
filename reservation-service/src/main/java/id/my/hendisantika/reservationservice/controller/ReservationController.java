@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,5 +54,11 @@ public class ReservationController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReservationResponseDTO> getReservationsById(@PathVariable UUID id) {
         return reservationService.getReservationById(id);
+    }
+
+    @GetMapping("/{date}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<List<Reservation>> getReservationsByDate(@PathVariable LocalDate date) {
+        return reservationService.getReservationByDate(date);
     }
 }
