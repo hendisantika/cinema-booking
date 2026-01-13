@@ -36,4 +36,10 @@ public class SeatController {
     public ResponseEntity<SeatResponseDTO> updateSeat(@RequestBody Seat seat) {
         return seatService.updateSeat(seat);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SeatResponseDTO> deleteSeat(@PathVariable Long id) {
+        return seatService.deleteSeat(id);
+    }
 }
