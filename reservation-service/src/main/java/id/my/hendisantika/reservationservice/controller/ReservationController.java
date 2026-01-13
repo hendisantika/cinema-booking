@@ -68,4 +68,10 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> getReservationsByTime(@PathVariable LocalTime time) {
         return reservationService.getReservationByTime(time);
     }
+
+    @PutMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ReservationResponseDTO> updateReservation(@RequestBody Reservation reservation) {
+        return reservationService.updateReservation(reservation);
+    }
 }
