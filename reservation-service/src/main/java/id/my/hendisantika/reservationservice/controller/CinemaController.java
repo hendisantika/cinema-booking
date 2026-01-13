@@ -50,4 +50,10 @@ public class CinemaController {
     public ResponseEntity<CinemaResponseDTO> updateCinema(@RequestBody Cinema cinema) {
         return cinemaService.updateCinema(cinema);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CinemaResponseDTO> deleteCinema(@PathVariable Long id) {
+        return cinemaService.deleteCinema(id);
+    }
 }
