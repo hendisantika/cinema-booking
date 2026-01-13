@@ -45,4 +45,10 @@ public class MovieController {
     public ResponseEntity<MovieResponseDTO> addMovie(@RequestBody Movie movie) {
         return movieService.addMovie(movie);
     }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MovieResponseDTO> updateMovie(@RequestBody Movie movie) {
+        return movieService.updateMovie(movie);
+    }
 }
