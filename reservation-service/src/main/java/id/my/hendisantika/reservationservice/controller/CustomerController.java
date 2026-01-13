@@ -54,4 +54,10 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> getCustomerByEmail(@PathVariable String email) {
         return customerService.getCustomerByEmail(email);
     }
+
+    @DeleteMapping("/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CustomerResponseDTO> deleteByEmail(@PathVariable String email) {
+        return customerService.deleteCustomer(email);
+    }
 }
