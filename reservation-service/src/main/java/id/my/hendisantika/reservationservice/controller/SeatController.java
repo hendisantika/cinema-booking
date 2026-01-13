@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : cinema-booking
@@ -41,5 +43,11 @@ public class SeatController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SeatResponseDTO> deleteSeat(@PathVariable Long id) {
         return seatService.deleteSeat(id);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Seat>> seats() {
+        return seatService.getSeats();
     }
 }
