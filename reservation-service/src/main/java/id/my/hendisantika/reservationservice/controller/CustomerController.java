@@ -48,4 +48,10 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> updateCustomer(@Valid @RequestBody Customer customer) {
         return customerService.updateCustomer(customer);
     }
+
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{email}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerByEmail(@PathVariable String email) {
+        return customerService.getCustomerByEmail(email);
+    }
 }
