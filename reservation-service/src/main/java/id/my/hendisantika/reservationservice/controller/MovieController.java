@@ -1,5 +1,6 @@
 package id.my.hendisantika.reservationservice.controller;
 
+import id.my.hendisantika.reservationservice.dto.Movie;
 import id.my.hendisantika.reservationservice.dto.response.MovieResponseDTO;
 import id.my.hendisantika.reservationservice.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,5 +35,11 @@ public class MovieController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<MovieResponseDTO> getMovieById(@PathVariable Long id) {
         return movieService.findMovieById(id);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<List<Movie>> getAllMovies() {
+        return movieService.findAllMovies();
     }
 }
