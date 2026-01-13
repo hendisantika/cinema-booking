@@ -4,10 +4,13 @@ import id.my.hendisantika.reservationservice.dto.Customer;
 import id.my.hendisantika.reservationservice.dto.response.CustomerResponseDTO;
 import id.my.hendisantika.reservationservice.service.CustomerService;
 import id.my.hendisantika.reservationservice.service.UserSyncService;
+import io.jsonwebtoken.Jwt;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,5 +62,15 @@ public class CustomerController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerResponseDTO> deleteByEmail(@PathVariable String email) {
         return customerService.deleteCustomer(email);
+    }
+
+    @PostMapping("/sync")
+    public ResponseEntity<String> syncUser(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No JWT found");
+        }
+        userSyncService.syncUser(jwt);
+
+        return ResponseEntity.ok("User synced successfully");
     }
 }
