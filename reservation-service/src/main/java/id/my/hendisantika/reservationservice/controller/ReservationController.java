@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,5 +61,11 @@ public class ReservationController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<Reservation>> getReservationsByDate(@PathVariable LocalDate date) {
         return reservationService.getReservationByDate(date);
+    }
+
+    @GetMapping("/{time}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<List<Reservation>> getReservationsByTime(@PathVariable LocalTime time) {
+        return reservationService.getReservationByTime(time);
     }
 }
