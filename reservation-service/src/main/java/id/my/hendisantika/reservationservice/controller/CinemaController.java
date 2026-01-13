@@ -38,4 +38,10 @@ public class CinemaController {
     public ResponseEntity<List<Cinema>> getAllCinemas() {
         return cinemaService.getAllCinemas();
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<CinemaResponseDTO> getCinemaById(@PathVariable Long id) {
+        return cinemaService.getCinemasById(id);
+    }
 }
