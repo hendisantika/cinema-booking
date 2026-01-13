@@ -51,4 +51,10 @@ public class MovieController {
     public ResponseEntity<MovieResponseDTO> updateMovie(@RequestBody Movie movie) {
         return movieService.updateMovie(movie);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MovieResponseDTO> deleteMovie(@PathVariable Long id) {
+        return movieService.deleteMovie(id);
+    }
 }
