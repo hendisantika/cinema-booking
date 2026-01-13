@@ -1,7 +1,13 @@
 package id.my.hendisantika.reservationservice.controller;
 
+import id.my.hendisantika.reservationservice.dto.Cinema;
+import id.my.hendisantika.reservationservice.dto.response.CinemaResponseDTO;
 import id.my.hendisantika.reservationservice.service.CinemaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,4 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CinemaController {
     private final CinemaService cinemaService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CinemaResponseDTO> addCinema(@RequestBody Cinema cinema) {
+        return cinemaService.addCinema(cinema);
+    }
 }
