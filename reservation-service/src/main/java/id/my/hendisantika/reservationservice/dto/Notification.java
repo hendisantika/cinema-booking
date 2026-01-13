@@ -1,12 +1,13 @@
 package id.my.hendisantika.reservationservice.dto;
 
-import id.my.hendisantika.reservationservice.enums.SeatType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,20 +16,21 @@ import lombok.NoArgsConstructor;
  * Link: s.id/hendisantika
  * Email: hendisantika@yahoo.co.id
  * Telegram : @hendisantika34
- * Date: 11/01/26
- * Time: 14.40
+ * Date: 14/01/26
+ * Time: 06.30
  * To change this template use File | Settings | File Templates.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatDetail {
-    @NotBlank
-    private SeatType type;
-    @NotNull
-    @Positive
-    private Double price;
-    @NotNull
-    @Positive
-    private  Integer quantity;
+public class Notification {
+    private UUID reservationId;
+    private LocalDate date;
+    private LocalTime time;
+    private String customerName;
+    private String email;
+    private String branchName;
+    private Long cinemaId;
+    private String movieName;
+    private List<Long> seatIds;
 }

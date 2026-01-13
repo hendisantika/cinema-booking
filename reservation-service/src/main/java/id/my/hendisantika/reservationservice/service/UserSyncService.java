@@ -2,8 +2,8 @@ package id.my.hendisantika.reservationservice.service;
 
 import id.my.hendisantika.reservationservice.entity.CustomerEntity;
 import id.my.hendisantika.reservationservice.repository.CustomerRepository;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 /**

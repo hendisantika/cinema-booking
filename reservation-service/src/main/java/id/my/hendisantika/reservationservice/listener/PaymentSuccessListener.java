@@ -1,6 +1,7 @@
 package id.my.hendisantika.reservationservice.listener;
 
 import id.my.hendisantika.reservationservice.dto.PaymentSuccessEvent;
+import id.my.hendisantika.reservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
