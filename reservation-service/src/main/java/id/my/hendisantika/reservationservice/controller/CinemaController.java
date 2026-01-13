@@ -44,4 +44,10 @@ public class CinemaController {
     public ResponseEntity<CinemaResponseDTO> getCinemaById(@PathVariable Long id) {
         return cinemaService.getCinemasById(id);
     }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CinemaResponseDTO> updateCinema(@RequestBody Cinema cinema) {
+        return cinemaService.updateCinema(cinema);
+    }
 }
