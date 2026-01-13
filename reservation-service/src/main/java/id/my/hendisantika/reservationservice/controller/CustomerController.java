@@ -43,4 +43,9 @@ public class CustomerController {
         return customerService.setCustomer(customer);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping
+    public ResponseEntity<CustomerResponseDTO> updateCustomer(@Valid @RequestBody Customer customer) {
+        return customerService.updateCustomer(customer);
+    }
 }
