@@ -74,4 +74,10 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDTO> updateReservation(@RequestBody Reservation reservation) {
         return reservationService.updateReservation(reservation);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReservationResponseDTO> deleteReservationById(@PathVariable UUID id) {
+        return reservationService.deleteReservation(id);
+    }
 }
