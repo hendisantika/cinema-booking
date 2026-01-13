@@ -6,10 +6,7 @@ import id.my.hendisantika.reservationservice.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,5 +29,11 @@ public class SeatController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SeatResponseDTO> addSeat(@RequestBody Seat seat) {
         return seatService.addSeat(seat);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SeatResponseDTO> updateSeat(@RequestBody Seat seat) {
+        return seatService.updateSeat(seat);
     }
 }
