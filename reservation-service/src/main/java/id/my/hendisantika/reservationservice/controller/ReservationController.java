@@ -6,6 +6,7 @@ import id.my.hendisantika.reservationservice.service.ReservationService;
 import id.my.hendisantika.reservationservice.service.UserSyncService;
 import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,5 +80,13 @@ public class ReservationController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReservationResponseDTO> deleteReservationById(@PathVariable UUID id) {
         return reservationService.deleteReservation(id);
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<List<Reservation>> getReservationsByDateAndTime(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time) {
+        return reservationService.getReservationByDateAndTime(date, time);
     }
 }
