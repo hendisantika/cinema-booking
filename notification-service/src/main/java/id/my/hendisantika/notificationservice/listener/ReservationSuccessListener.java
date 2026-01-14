@@ -1,6 +1,7 @@
 package id.my.hendisantika.notificationservice.listener;
 
 import id.my.hendisantika.notificationservice.dto.Notification;
+import id.my.hendisantika.notificationservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

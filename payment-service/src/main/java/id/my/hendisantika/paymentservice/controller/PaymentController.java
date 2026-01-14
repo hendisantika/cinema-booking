@@ -2,10 +2,10 @@ package id.my.hendisantika.paymentservice.controller;
 
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import id.my.hendisantika.paymentservice.dto.PaymentFailedEvent;
 import id.my.hendisantika.paymentservice.dto.PaymentSuccessEvent;
-import id.my.hendisantika.paymentservice.session.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

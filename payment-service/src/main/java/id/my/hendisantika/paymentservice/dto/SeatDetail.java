@@ -1,5 +1,6 @@
 package id.my.hendisantika.paymentservice.dto;
 
+import id.my.hendisantika.paymentservice.enums.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

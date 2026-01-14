@@ -2,11 +2,11 @@ package id.my.hendisantika.paymentservice.service;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.param.billingportal.SessionCreateParams;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import id.my.hendisantika.paymentservice.dto.PaymentRequest;
 import id.my.hendisantika.paymentservice.dto.PaymentResponse;
 import id.my.hendisantika.paymentservice.dto.SeatDetail;
-import id.my.hendisantika.paymentservice.session.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
