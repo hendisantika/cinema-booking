@@ -18,10 +18,22 @@
         <spring-cloud.version>2025.1.0</spring-cloud.version>
     </properties>
     <dependencies>
-        <!-- ✅ Spring Cloud Gateway (WebFlux, Netty) -->
+        <!-- ✅ Spring Boot WebFlux (Reactive Web Framework) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <!-- ✅ Spring Cloud Gateway Server WebFlux (Reactive) -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-cloud-gateway-server-webflux</artifactId>
+        </dependency>
+
+        <!-- ✅ Spring Cloud LoadBalancer -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
         <!-- ✅ Redis (Reactive) -->
@@ -35,14 +47,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+        <!-- ✅ Spring Boot Test (includes JUnit 5) -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- ❌ NO spring-boot-starter-web -->
+        <!-- ℹ️  Using WebFlux (reactive) instead of traditional Spring MVC -->
         <!-- ❌ NO devtools -->
         <!-- ❌ NO forced versions -->
     </dependencies>
